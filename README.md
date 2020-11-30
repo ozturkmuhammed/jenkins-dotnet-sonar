@@ -1,2 +1,2 @@
-# docker-jenkins-dotnet-sonar
+# jenkins-dotnet-sonar
 🐋 Docker image with Jenkins + dotnet + Sonarqube
