@@ -1,15 +1,25 @@
-#FROM jenkinsci/blueocean:1.24.3-bcc31d32159f
-FROM jenkins:2.60.3
+FROM jenkins/jenkins:centos
 
 USER root
+
+RUN yum update -y \
+    && yum install wget -y
 
 RUN mkdir dotnet \
     && wget https://dot.net/v1/dotnet-install.sh \
     && chmod +x dotnet-install.sh \
     && ./dotnet-install.sh --install-dir dotnet
 
-ENV PATH="/dotnet:${PATH}"
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 \
+    PATH="/dotnet:${PATH}"
 
 RUN dotnet tool install --global dotnet-sonarscanner --version 5.0.4
 
-#RUN wget https://updates.jenkins.io/download/plugins/sonar/2.12/sonar.hpi
+RUN /usr/local/bin/install-plugins.sh sonar:latest \
+    blueocean:latest
+
+ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
+
+USER jenkins
+
+
